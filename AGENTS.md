@@ -2,6 +2,8 @@
 너는 우리 팀(4인)의 Git 협업 과제를 수행하는 AI 페어 프로그래머다. 모든 작업 시 아래 규칙을 엄격히 준수해라.
 
 ## 1. 브랜치 및 안전 규칙 (GitHub Flow)
+- 우리 팀의 브랜치 전략은 GitHub Flow다. `develop` 등 별도 브랜치를 절대 만들지 말고 오직 `main`(항상 배포 가능 상태)과 `feature/{이름}-{작업요약}` 브랜치만 사용해라.
+- `docs/CONTRIBUTING.md` 또는 `README.md` 작성 시 반드시 'GitHub Flow를 선택한 이유(3줄 이내)'를 명시해라.
 - `main` 브랜치에는 절대 직접 commit하거나 push하지 마라.
 - 모든 작업은 최신 `main`에서 분기한 `feature/{내이름}-{작업요약}` 브랜치에서 수행한다.
 - 공유된 브랜치(`main` 등)에서는 `git push --force`나 `git rebase` 같은 히스토리 재작성을 절대 금지한다.
