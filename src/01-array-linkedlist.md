@@ -85,7 +85,140 @@ head
 - **연결 리스트가 맞는 경우**: 앞쪽이나 중간에서 삽입·삭제가 잦고, 삽입할 위치의 노드를 이미 알고 있을 때
 - **파이썬에서는**: 대부분 `list`로 충분합니다. 양쪽 끝에서 넣고 빼는 일이 많다면 `collections.deque`를 씁니다. 양 끝 삽입·삭제가 O(1)이며, 내부적으로 연결 구조를 사용합니다.
 
-## 6. 정리
+## 6. 파이썬 구현 예제
+
+아래 코드는 Python 3.10 이상에서 그대로 실행됩니다. 코드 블록을 파일로 저장해 `python3 파일명.py`로 실행하면 바로 아래 실행 결과가 나옵니다.
+
+### 6-1. 배열(`list`) 기본 연산
+
+```python
+numbers = [10, 20, 30, 40]
+
+print(numbers[2])      # 인덱스 접근: 계산 한 번으로 바로 찾는다
+numbers.append(50)     # 끝에 추가
+numbers.insert(0, 5)   # 맨 앞에 삽입: 뒤 요소를 모두 한 칸씩 민다
+print(numbers)
+numbers.pop()          # 끝 삭제
+numbers.pop(0)         # 맨 앞 삭제: 뒤 요소를 모두 한 칸씩 당긴다
+print(numbers)
+```
+
+실행 결과:
+
+```text
+30
+[5, 10, 20, 30, 40, 50]
+[10, 20, 30, 40]
+```
+
+### 6-2. 단일 연결 리스트 구현
+
+```python
+class Node:
+    """연결 리스트의 노드. 데이터와 다음 노드에 대한 참조를 가진다."""
+
+    def __init__(self, data, next_node=None):
+        self.data = data
+        self.next = next_node
+
+
+class SinglyLinkedList:
+    """head 하나만 관리하는 단일 연결 리스트."""
+
+    def __init__(self):
+        self.head = None
+        self._size = 0
+
+    def __len__(self):
+        return self._size
+
+    def __iter__(self):
+        current = self.head
+        while current is not None:
+            yield current.data
+            current = current.next
+
+    def prepend(self, data):
+        """맨 앞에 추가한다. head만 바꾸면 되므로 O(1)."""
+        self.head = Node(data, self.head)
+        self._size += 1
+
+    def append(self, data):
+        """맨 뒤에 추가한다. 마지막 노드를 찾아가야 하므로 O(n)."""
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next is not None:
+                current = current.next
+            current.next = new_node
+        self._size += 1
+
+    def find(self, data):
+        """값이 같은 첫 노드를 돌려준다. 없으면 None. O(n)."""
+        current = self.head
+        while current is not None:
+            if current.data == data:
+                return current
+            current = current.next
+        return None
+
+    def remove(self, data):
+        """값이 같은 첫 노드를 삭제한다. 삭제했으면 True, 없으면 False.
+
+        핵심은 앞 노드(prev)의 next가 삭제할 노드를 건너뛰게 바꾸는 것이다.
+        """
+        prev = None
+        current = self.head
+        while current is not None:
+            if current.data == data:
+                if prev is None:
+                    self.head = current.next   # head 노드를 삭제하는 경우
+                else:
+                    prev.next = current.next   # 앞 노드가 다음 노드를 직접 가리킨다
+                self._size -= 1
+                return True
+            prev = current
+            current = current.next
+        return False
+
+
+if __name__ == "__main__":
+    items = SinglyLinkedList()
+    items.append(10)
+    items.append(20)
+    items.append(30)
+    items.prepend(5)
+    print(list(items), len(items))
+    print(items.find(20) is not None)
+    print(items.find(99) is not None)
+
+    print(items.remove(10))   # 중간 노드 삭제
+    print(list(items))
+    print(items.remove(5))    # head 노드 삭제
+    print(list(items))
+    print(items.remove(99))   # 없는 값
+    print(list(items), len(items))
+```
+
+실행 결과:
+
+```text
+[5, 10, 20, 30] 4
+True
+False
+True
+[5, 20, 30]
+True
+[20, 30]
+False
+[20, 30] 2
+```
+
+`remove`는 데이터를 지우는 것이 아니라 **앞 노드의 `next` 참조를 바꿔 해당 노드를 건너뛰게 만드는 것**입니다. 아무도 가리키지 않게 된 노드는 파이썬이 알아서 메모리에서 정리합니다.
+
+## 7. 정리
 
 - 배열은 **연속된 메모리**라서 접근이 빠르고, 중간 삽입·삭제가 느립니다.
 - 연결 리스트는 **참조로 연결된 노드**라서 삽입·삭제 자체는 빠르지만, 원하는 위치를 찾는 데 시간이 듭니다.
