@@ -1,0 +1,6 @@
+# 주제별 PR 리뷰어 
+# A(Dong-tak)은 B, C의 PR을, B(ted1117)는 C, D의 PR을, C(yoo040501)는 D, A의 PR을, D(ChoMyeongHwan)는 A, B의 PR을 리뷰
+src/01-array-linkedlist.md   @yoo040501 @ChoMyeongHwan
+src/02-stack-queue.md        @Dong-tak @ChoMyeongHwan
+src/03-tree-heap.md          @Dong-tak @ted1117
+src/04-hash-graph.md         @ted1117 @yoo040501
