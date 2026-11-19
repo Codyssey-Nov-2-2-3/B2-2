@@ -108,3 +108,171 @@ graph LR
 | 시간복잡도 (인접 리스트) | O(V + E) | O(V + E) |
 | 공간복잡도 | O(V) | O(V) |
 | 대표 활용 | 무가중치 최단 경로, 최단 이동 횟수 | 연결 요소 탐색, 사이클 탐지, 위상 정렬 |
+
+## 4. Python 3.10+ 구현 예제
+
+아래 예제는 Python 3.10 이상(Python 3.12.13에서 실행 검증)에서 표준 라이브러리만으로 동작한다.
+
+### 4-1. 체이닝 기반 해시 테이블 구현
+
+같은 버킷에 충돌이 발생하는 상황(`melon`, `lemon`)을 재현하고 삽입·갱신·조회·삭제가 정상 동작하는지 확인한다.
+
+```python
+class HashTable:
+    """체이닝 방식으로 해시 충돌을 해결하는 간단한 해시 테이블."""
+
+    def __init__(self, size: int = 5) -> None:
+        self.size = size
+        self.buckets: list[list[tuple[str, int]]] = [[] for _ in range(size)]
+
+    def _hash(self, key: str) -> int:
+        # 실행할 때마다 동일한 버킷 분포를 확인하기 위해 결정적 해시 함수 사용
+        return sum(ord(ch) for ch in key) % self.size
+
+    def put(self, key: str, value: int) -> None:
+        index = self._hash(key)
+        bucket = self.buckets[index]
+        for i, (existing_key, _) in enumerate(bucket):
+            if existing_key == key:
+                bucket[i] = (key, value)  # 기존 키 값 갱신
+                return
+        bucket.append((key, value))
+
+    def get(self, key: str) -> int | None:
+        index = self._hash(key)
+        for existing_key, value in self.buckets[index]:
+            if existing_key == key:
+                return value
+        return None
+
+    def delete(self, key: str) -> bool:
+        index = self._hash(key)
+        bucket = self.buckets[index]
+        for i, (existing_key, _) in enumerate(bucket):
+            if existing_key == key:
+                bucket.pop(i)
+                return True
+        return False
+
+
+if __name__ == "__main__":
+    table = HashTable(size=5)
+    table.put("apple", 1000)
+    table.put("grape", 2500)
+    table.put("melon", 5000)
+    table.put("lemon", 1800)  # melon과 같은 버킷(4번)에 충돌 발생
+    table.put("apple", 1200)  # 기존 키 갱신
+
+    print("버킷 4 내용:", table.buckets[4])
+    print("apple:", table.get("apple"))
+    print("lemon:", table.get("lemon"))
+    print("peach:", table.get("peach"))
+    print("melon 삭제:", table.delete("melon"))
+    print("삭제 후 버킷 4:", table.buckets[4])
+```
+
+실행 결과:
+
+```text
+버킷 4 내용: [('melon', 5000), ('lemon', 1800)]
+apple: 1200
+lemon: 1800
+peach: None
+melon 삭제: True
+삭제 후 버킷 4: [('lemon', 1800)]
+```
+
+### 4-2. 파이썬 `dict`와 `set` 활용
+
+실무에서는 내장 `dict`와 `set`을 사용해 빈도 집계와 평균 O(1) 존재 여부 검사를 간결하게 작성한다.
+
+```python
+if __name__ == "__main__":
+    words = ["hash", "graph", "hash", "bfs", "graph", "hash"]
+    counts: dict[str, int] = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+
+    unique_words: set[str] = set(words)
+    print("빈도 집계:", counts)
+    print("고유 단어 수:", len(unique_words))
+    print("'bfs' 포함 여부:", "bfs" in unique_words)
+    print("'tree' 포함 여부:", "tree" in unique_words)
+```
+
+실행 결과:
+
+```text
+빈도 집계: {'hash': 3, 'graph': 2, 'bfs': 1}
+고유 단어 수: 3
+'bfs' 포함 여부: True
+'tree' 포함 여부: False
+```
+
+### 4-3. 인접 리스트 기반 그래프 BFS와 DFS 탐색
+
+3절의 무방향 그래프(정점 A-E)를 인접 리스트로 표현하고, `collections.deque` 기반 BFS와 스택 기반 반복문 DFS의 방문 순서를 비교한다.
+
+```python
+from collections import deque
+
+
+def bfs(graph: dict[str, list[str]], start: str) -> list[str]:
+    visited: set[str] = {start}
+    queue: deque[str] = deque([start])
+    order: list[str] = []
+
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return order
+
+
+def dfs(graph: dict[str, list[str]], start: str) -> list[str]:
+    visited: set[str] = set()
+    stack: list[str] = [start]
+    order: list[str] = []
+
+    while stack:
+        node = stack.pop()
+        if node in visited:
+            continue
+        visited.add(node)
+        order.append(node)
+        # 인접 리스트 앞쪽 정점부터 방문하도록 역순으로 스택에 추가
+        for neighbor in reversed(graph[node]):
+            if neighbor not in visited:
+                stack.append(neighbor)
+    return order
+
+
+if __name__ == "__main__":
+    graph: dict[str, list[str]] = {
+        "A": ["B", "C"],
+        "B": ["A", "D"],
+        "C": ["A", "D", "E"],
+        "D": ["B", "C"],
+        "E": ["C"],
+    }
+    print("BFS 방문 순서:", bfs(graph, "A"))
+    print("DFS 방문 순서:", dfs(graph, "A"))
+```
+
+실행 결과:
+
+```text
+BFS 방문 순서: ['A', 'B', 'C', 'D', 'E']
+DFS 방문 순서: ['A', 'B', 'D', 'C', 'E']
+```
+
+`bfs`는 시작점 `A`에서 간선 1개 거리(`B`, `C`)를 모두 방문한 뒤 간선 2개 거리(`D`, `E`)로 확장한다. 반면 `dfs`는 `A -> B -> D -> C -> E` 순으로 한 경로를 끝까지 탐색한 뒤 되돌아온다.
+
+## 5. 정리
+
+- **해시 테이블**은 해시 함수로 키를 버킷에 매핑해 평균 O(1) 탐색·삽입·삭제를 제공하지만, 충돌 집중 시 최악 O(n)이 되므로 부하율 관리와 리해싱이 중요하다.
+- **그래프**는 정점과 간선으로 복잡한 연결 관계를 나타내며, 간선 밀도에 따라 인접 리스트(`O(V + E)`)와 인접 행렬(`O(V²)`)을 선택한다.
+- **BFS**는 큐를 사용해 무가중치 최단 경로 탐색에 적합하고, **DFS**는 스택·재귀로 깊이 우선 탐색·사이클 탐지·위상 정렬에 활용된다.
