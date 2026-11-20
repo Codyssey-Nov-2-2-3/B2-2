@@ -43,6 +43,7 @@
 ```python
 class Stack:
     def __init__(self) -> None:
+        # 예제를 단순하게 유지하기 위해 원소 타입을 int와 str로 제한한다.
         self._items: list[int | str] = []
 
     def push(self, item: int | str) -> None:
@@ -62,13 +63,28 @@ class Stack:
         return not self._items
 
 
-stack = Stack()
-stack.push(1)
-stack.push(2)
-stack.push(3)
-print(stack.pop())   # 3 (가장 나중에 넣은 값이 먼저 나온다)
-print(stack.peek())  # 2
-print(stack.is_empty())  # False
+if __name__ == "__main__":
+    stack = Stack()
+    stack.push(1)
+    stack.push(2)
+    stack.push(3)
+    print(stack.pop())  # 가장 나중에 넣은 값이 먼저 나온다.
+    print(stack.peek())
+    print(stack.is_empty())
+
+    try:
+        Stack().pop()
+    except IndexError as error:
+        print(error)
+```
+
+**실행 결과**
+
+```text
+3
+2
+False
+빈 스택에서는 pop할 수 없다
 ```
 
 ### 큐: `collections.deque` 사용
@@ -81,6 +97,7 @@ from collections import deque
 
 class Queue:
     def __init__(self) -> None:
+        # 예제를 단순하게 유지하기 위해 원소 타입을 int와 str로 제한한다.
         self._items: deque[int | str] = deque()
 
     def enqueue(self, item: int | str) -> None:
@@ -100,11 +117,26 @@ class Queue:
         return not self._items
 
 
-queue = Queue()
-queue.enqueue("a")
-queue.enqueue("b")
-queue.enqueue("c")
-print(queue.dequeue())  # a (가장 먼저 넣은 값이 먼저 나온다)
-print(queue.front())    # b
-print(queue.is_empty()) # False
+if __name__ == "__main__":
+    queue = Queue()
+    queue.enqueue("a")
+    queue.enqueue("b")
+    queue.enqueue("c")
+    print(queue.dequeue())  # 가장 먼저 넣은 값이 먼저 나온다.
+    print(queue.front())
+    print(queue.is_empty())
+
+    try:
+        Queue().dequeue()
+    except IndexError as error:
+        print(error)
+```
+
+**실행 결과**
+
+```text
+a
+b
+False
+빈 큐에서는 dequeue할 수 없다
 ```
