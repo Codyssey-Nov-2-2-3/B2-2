@@ -34,7 +34,7 @@ value  | 10  | 20  | 30  | 40  |   <- 메모리에 연속으로 배치
 파이썬의 `list`는 **동적 배열**입니다. (CPython 기준)
 
 - 요소 값 자체가 아니라 **객체에 대한 참조**를 연속된 공간에 저장합니다. 그래서 서로 다른 타입을 섞어 담을 수 있습니다.
-- 공간이 가득 차면 여유 있게 더 큰 공간을 잡아 옮기므로, `append`는 평균적으로 **O(1)**입니다.
+- 공간이 가득 차면 여유 있게 더 큰 공간을 잡아 옮기므로, `append`는 **분할 상환(amortized) O(1)**입니다. 다만 크기를 늘려 복사하는 그 순간의 `append` 한 번은 최악의 경우 **O(n)**입니다.
 - `insert(0, x)`나 `pop(0)`처럼 앞쪽을 건드리는 연산은 **O(n)**입니다.
 
 ## 3. 연결 리스트 (Linked List)
@@ -59,6 +59,7 @@ head
 - 맨 앞 삽입은 새 노드의 `next`를 기존 `head`로 연결하고 `head`를 바꾸면 끝나서 **O(1)**입니다.
 - 삽입·삭제할 위치의 **앞 노드를 이미 알고 있다면** 참조 한두 개만 바꾸면 되어 **O(1)**입니다. 요소를 옮길 필요가 없습니다.
 - 다만 그 위치를 찾는 과정은 **O(n)**이라, 값을 기준으로 삭제하면 전체로는 O(n)입니다.
+- 단일 연결 리스트는 `tail`을 관리해도 **마지막 노드를 삭제하려면 그 앞 노드를 찾아야 해서 O(n)**입니다. (이중 연결 리스트는 `prev`가 있어 O(1)입니다.)
 
 ### 종류
 
@@ -75,7 +76,8 @@ head
 | 메모리 배치 | 연속된 공간 | 노드가 흩어져 있고 참조로 연결 |
 | 인덱스 접근 | 바로 접근 (빠름) | 처음부터 따라가야 함 (느림) |
 | 앞쪽 삽입·삭제 | 뒤 요소를 모두 이동 (느림) | 참조만 변경 (빠름) |
-| 뒤쪽 삽입·삭제 | 빠름 | `tail`을 따로 관리하지 않으면 끝까지 탐색 |
+| 뒤쪽 삽입 | 빠름 (리사이징 순간에만 느림) | `tail`을 관리하면 빠름, 관리하지 않으면 끝까지 탐색 |
+| 뒤쪽 삭제 | 빠름 | 단일 연결 리스트는 `tail`이 있어도 앞 노드를 찾아야 해서 느림 |
 | 추가 메모리 | 거의 없음 | 노드마다 `next` 참조를 저장 |
 | 크기 변경 | 가득 차면 더 큰 공간으로 이동 | 노드를 하나씩 붙이고 떼면 됨 |
 
@@ -113,11 +115,18 @@ print(numbers)
 
 ### 6-2. 단일 연결 리스트 구현
 
+타입 힌트를 붙였습니다. `from __future__ import annotations`는 `Node | None`처럼 아직 정의 중인 클래스 이름을 힌트에 쓸 수 있게 해 줍니다.
+
 ```python
+from __future__ import annotations
+
+from collections.abc import Iterator
+
+
 class Node:
     """연결 리스트의 노드. 데이터와 다음 노드에 대한 참조를 가진다."""
 
-    def __init__(self, data, next_node=None):
+    def __init__(self, data, next_node: Node | None = None) -> None:
         self.data = data
         self.next = next_node
 
@@ -125,25 +134,25 @@ class Node:
 class SinglyLinkedList:
     """head 하나만 관리하는 단일 연결 리스트."""
 
-    def __init__(self):
-        self.head = None
+    def __init__(self) -> None:
+        self.head: Node | None = None
         self._size = 0
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._size
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
         current = self.head
         while current is not None:
             yield current.data
             current = current.next
 
-    def prepend(self, data):
+    def prepend(self, data) -> None:
         """맨 앞에 추가한다. head만 바꾸면 되므로 O(1)."""
         self.head = Node(data, self.head)
         self._size += 1
 
-    def append(self, data):
+    def append(self, data) -> None:
         """맨 뒤에 추가한다. 마지막 노드를 찾아가야 하므로 O(n)."""
         new_node = Node(data)
         if self.head is None:
@@ -155,7 +164,7 @@ class SinglyLinkedList:
             current.next = new_node
         self._size += 1
 
-    def find(self, data):
+    def find(self, data) -> Node | None:
         """값이 같은 첫 노드를 돌려준다. 없으면 None. O(n)."""
         current = self.head
         while current is not None:
@@ -164,7 +173,7 @@ class SinglyLinkedList:
             current = current.next
         return None
 
-    def remove(self, data):
+    def remove(self, data) -> bool:
         """값이 같은 첫 노드를 삭제한다. 삭제했으면 True, 없으면 False.
 
         핵심은 앞 노드(prev)의 next가 삭제할 노드를 건너뛰게 바꾸는 것이다.
