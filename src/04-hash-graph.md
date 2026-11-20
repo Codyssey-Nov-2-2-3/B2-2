@@ -106,28 +106,42 @@ graph LR
 | 탐색 순서 | 시작점에서 가까운(간선 수가 적은) 정점부터 레벨 순 방문 | 한 분기를 끝까지 파고든 뒤 되돌아와 다음 분기 탐색 |
 | 핵심 자료구조 | 큐 (`collections.deque`) | 스택 (`list`) 또는 재귀 호출 스택 |
 | 시간복잡도 (인접 리스트) | O(V + E) | O(V + E) |
-| 공간복잡도 | O(V) | O(V) |
+| 공간복잡도 | O(V) | O(V) (표준 재귀 기준, 아래 반복문 스택 구현은 중복 push로 최악 O(E)) |
 | 대표 활용 | 무가중치 최단 경로, 최단 이동 횟수 | 연결 요소 탐색, 사이클 탐지, 위상 정렬 |
 
 ## 4. Python 3.10+ 구현 예제
 
 아래 예제는 Python 3.10 이상(Python 3.12.13에서 실행 검증)에서 표준 라이브러리만으로 동작한다.
 
-### 4-1. 체이닝 기반 해시 테이블 구현
+### 4-1. 체이닝과 리해싱을 포함한 해시 테이블 구현
 
-같은 버킷에 충돌이 발생하는 상황(`melon`, `lemon`)을 재현하고 삽입·갱신·조회·삭제가 정상 동작하는지 확인한다.
+같은 버킷에 충돌이 발생하는 상황(`melon`, `lemon`)을 체이닝으로 처리하고, 부하율이 임계치(`0.8`)를 초과하면 버킷 크기를 2배로 늘려 재분배하는 리해싱(`_rehash`) 동작까지 함께 확인한다.
 
 ```python
 class HashTable:
-    """체이닝 방식으로 해시 충돌을 해결하는 간단한 해시 테이블."""
+    """체이닝과 자동 리해싱을 지원하는 간단한 해시 테이블."""
 
-    def __init__(self, size: int = 5) -> None:
+    def __init__(self, size: int = 5, max_load_factor: float = 0.8) -> None:
         self.size = size
+        self.max_load_factor = max_load_factor
         self.buckets: list[list[tuple[str, int]]] = [[] for _ in range(size)]
+        self._count = 0
 
     def _hash(self, key: str) -> int:
         # 실행할 때마다 동일한 버킷 분포를 확인하기 위해 결정적 해시 함수 사용
         return sum(ord(ch) for ch in key) % self.size
+
+    @property
+    def load_factor(self) -> float:
+        return self._count / self.size
+
+    def _rehash(self) -> None:
+        old_buckets = self.buckets
+        self.size *= 2
+        self.buckets = [[] for _ in range(self.size)]
+        for bucket in old_buckets:
+            for key, value in bucket:
+                self.buckets[self._hash(key)].append((key, value))
 
     def put(self, key: str, value: int) -> None:
         index = self._hash(key)
@@ -137,6 +151,9 @@ class HashTable:
                 bucket[i] = (key, value)  # 기존 키 값 갱신
                 return
         bucket.append((key, value))
+        self._count += 1
+        if self.load_factor > self.max_load_factor:
+            self._rehash()
 
     def get(self, key: str) -> int | None:
         index = self._hash(key)
@@ -151,16 +168,17 @@ class HashTable:
         for i, (existing_key, _) in enumerate(bucket):
             if existing_key == key:
                 bucket.pop(i)
+                self._count -= 1
                 return True
         return False
 
 
 if __name__ == "__main__":
-    table = HashTable(size=5)
+    table = HashTable(size=5, max_load_factor=0.8)
     table.put("apple", 1000)
     table.put("grape", 2500)
     table.put("melon", 5000)
-    table.put("lemon", 1800)  # melon과 같은 버킷(4번)에 충돌 발생
+    table.put("lemon", 1800)  # melon과 같은 버킷(4번)에 충돌 발생 (부하율 0.8)
     table.put("apple", 1200)  # 기존 키 갱신
 
     print("버킷 4 내용:", table.buckets[4])
@@ -169,6 +187,12 @@ if __name__ == "__main__":
     print("peach:", table.get("peach"))
     print("melon 삭제:", table.delete("melon"))
     print("삭제 후 버킷 4:", table.buckets[4])
+
+    # 원소를 추가해 부하율(0.8)을 초과하면 버킷 크기가 5 -> 10으로 자동 리해싱됨
+    table.put("peach", 3000)
+    table.put("berry", 4200)
+    print(f"리해싱 후 버킷 크기: {table.size}, 부하율: {table.load_factor:.2f}")
+    print("리해싱 후 lemon 조회:", table.get("lemon"))
 ```
 
 실행 결과:
@@ -180,6 +204,8 @@ lemon: 1800
 peach: None
 melon 삭제: True
 삭제 후 버킷 4: [('lemon', 1800)]
+리해싱 후 버킷 크기: 10, 부하율: 0.50
+리해싱 후 lemon 조회: 1800
 ```
 
 ### 4-2. 파이썬 `dict`와 `set` 활용
@@ -270,6 +296,8 @@ DFS 방문 순서: ['A', 'B', 'D', 'C', 'E']
 ```
 
 `bfs`는 시작점 `A`에서 간선 1개 거리(`B`, `C`)를 모두 방문한 뒤 간선 2개 거리(`D`, `E`)로 확장한다. 반면 `dfs`는 `A -> B -> D -> C -> E` 순으로 한 경로를 끝까지 탐색한 뒤 되돌아온다.
+
+참고로 위 반복문 `dfs` 구현은 스택에서 정점을 꺼낼 때(`pop`) 방문 처리를 하므로, 아직 방문하지 않은 정점이 여러 이웃에서 스택에 중복 추가될 수 있어 스택 공간이 최악 O(E)까지 커질 수 있다. 반면 재귀 기반 DFS나 스택에 넣기 전에 방문을 표시하는 방식은 각 정점이 최대 한 번만 쌓이므로 공간복잡도가 O(V)로 유지된다.
 
 ## 5. 정리
 
