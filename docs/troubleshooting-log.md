@@ -26,6 +26,8 @@ git log -n 1                                                                    
 git push -u origin feature/dongtak-array-note                                           # amend를 끝낸 뒤에 push
 ```
 
+`git commit --amend`는 **스테이징된 변경도 함께 새 커밋에 포함**합니다. 이 실습은 커밋 직후에 바로 고쳐서 따로 스테이징한 파일이 없었지만, 메시지만 고치는 것이 목적이라면 amend 전에 `git diff --cached --stat`로 스테이징된 파일이 없는지 먼저 확인하는 것이 안전합니다. 다른 파일이 스테이징돼 있을 수 있다면 `git commit --amend --only -m "..."`를 씁니다. `--only`는 경로 없이 쓰면 스테이징된 변경을 넣지 않고 메시지만 고칩니다. (두 동작은 아래 [재현 방법](#재현-방법)의 임시 저장소에서 확인했습니다.)
+
 수정 전 `git log -n 1` 결과입니다. (이메일은 마스킹했습니다.)
 
 ```text
@@ -53,8 +55,8 @@ Date:   Mon Nov 16 22:30:25 2026 +0900
 ### 결과
 
 - 마지막 커밋의 메시지가 `dcos:`에서 `docs:`로 바뀌었습니다.
-- 커밋 해시가 `213f19c`에서 `acdb436`으로 **바뀌었습니다.** 메시지도 해시 계산에 들어가므로, 메시지만 고쳐도 새 커밋 객체가 됩니다.
-- 파일 내용(tree `1496c0d`)과 `Date`는 그대로이고, 브랜치의 커밋 개수도 4개로 그대로입니다. `--amend`는 새 커밋을 더하지 않고 마지막 커밋을 **교체**합니다.
+- 커밋 해시가 `213f19c`에서 `acdb436`으로 **바뀌었습니다.** 메시지도 해시 계산에 들어가므로, 메시지만 고쳐도 새 커밋 객체가 됩니다. 또 `--amend`는 AuthorDate(`git log`의 `Date:`)를 유지하는 대신 **CommitterDate는 새로 갱신**하기 때문에(`git log --format=fuller`로 확인), 메시지를 바꾸지 않고 `git commit --amend --no-edit`만 실행해도 해시가 달라집니다.
+- 파일 내용(tree `1496c0d`)과 `Date`(AuthorDate)는 그대로이고, 브랜치의 커밋 개수도 4개로 그대로입니다. `--amend`는 새 커밋을 더하지 않고 마지막 커밋을 **교체**합니다.
 - 오타 커밋 `213f19c`는 push 전에 고쳤기 때문에 **원격에 올라간 적이 없습니다.** GitHub에서 이 해시를 조회하면 존재하지 않고, 원격에는 수정된 [`acdb436`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/acdb43629cb3fe40f8da453eb91acff6d18c9e66)만 PR #9에 포함됐습니다.
 
 ### 주의할 점 (원격 히스토리와 협업 영향)
@@ -87,9 +89,13 @@ git log -n 1                                         # 해시와 메시지 기�
 git commit --amend -m "docs: 연습 노트 파일 추가"   # 메시지만 수정
 git log -n 1                                         # 해시가 바뀌고 메시지가 고쳐졌는지 확인
 git reflog                                           # 이전 커밋이 남아 있는지 확인
+git log -n 1 --format=fuller                         # AuthorDate는 그대로, CommitDate만 갱신되는지 확인
 ```
 
-위 절차를 임시 저장소에서 실행했을 때 해시는 `d90956f`에서 `e704b93`으로 바뀌었고, 파일 내용(tree)과 커밋 개수(1개)는 그대로였으며, `git reflog`에는 `commit (initial)`과 `commit (amend)`가 모두 남았습니다.
+위 절차를 임시 저장소에서 실행했을 때 해시는 `d90956f`에서 `e704b93`으로 바뀌었고, 파일 내용(tree)과 커밋 개수(1개)는 그대로였으며, `git reflog`에는 `commit (initial)`과 `commit (amend)`가 모두 남았습니다. 같은 저장소에서 확인한 추가 사실은 다음과 같습니다.
+
+- AuthorDate는 그대로이고 CommitterDate만 2초 뒤로 갱신됐습니다. 메시지를 바꾸지 않은 `git commit --amend --no-edit`도 해시를 바꿨습니다(`fb86b65` → `2739f1c`).
+- 다른 파일(`b.md`)을 스테이징한 채 `git commit --amend -m "..."`를 하면 그 파일이 커밋에 함께 들어가 tree가 달라졌습니다. 같은 상황에서 `git commit --amend --only -m "..."`는 tree가 그대로였고 스테이징된 파일은 스테이징 상태로 남았습니다.
 
 ## 시나리오: reset (`git reset --soft HEAD~1`)
 
