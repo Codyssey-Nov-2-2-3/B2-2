@@ -312,6 +312,79 @@ print("남은 값 추출:", ordered)
 
 이 방법은 부호 반전이 가능한 숫자 데이터에 사용하는 방식이다.
 
+### 5-4. 힙 정렬(Heap Sort) 심화 예제
+
+**힙 정렬**(Heap Sort)은 배열을 최대 힙으로 구성한 뒤, 루트(최댓값)를 배열 끝으로 반복 교환하며 정렬하는 알고리즘이다.
+
+- **1단계 (최대 힙 구성)**: 마지막 내부 노드(`(n - 2) // 2`)부터 루트까지 아래로 내려보내기(`_sift_down`)를 수행해 배열 전체를 최대 힙으로 만든다. 시간복잡도는 O(n)이다.
+- **2단계 (최댓값 반복 추출)**: 루트(`arr[0]`)와 힙의 마지막 원소(`arr[end]`)를 맞바꾸고 힙 크기를 1 줄인 뒤 루트에서 `_sift_down`을 수행한다. 이 과정을 `n - 1`번 반복하므로 시간복잡도는 O(n log n)이다.
+- **특징**: 최선·평균·최악 모두 시간복잡도가 **O(n log n)**으로 일정하다. 정렬 과정 자체는 제자리에서 **O(1)**의 추가 공간만 사용하지만, 아래 `heap_sort()` 예제는 입력 원본을 보존하려고 `values.copy()`로 복사본을 생성하므로 함수 전체 기준 추가 공간은 **O(n)**이다. 또한 같은 값의 원래 순서가 유지되지 않는 **불안정 정렬**(Unstable Sort)이다.
+
+```python
+import heapq
+
+
+def _sift_down(arr: list[int], root: int, heap_size: int) -> None:
+    """최대 힙 성질을 만족하도록 root 위치의 값을 아래로 내려보낸다."""
+    while True:
+        largest = root
+        left = 2 * root + 1
+        right = 2 * root + 2
+
+        if left < heap_size and arr[left] > arr[largest]:
+            largest = left
+        if right < heap_size and arr[right] > arr[largest]:
+            largest = right
+        if largest == root:
+            break
+
+        arr[root], arr[largest] = arr[largest], arr[root]
+        root = largest
+
+
+def heap_sort(values: list[int]) -> list[int]:
+    """최대 힙 정렬. 정렬 과정은 제자리 O(1)이나 원본 보호용 복사로 함수 전체 추가 공간은 O(n)."""
+    arr = values.copy()
+    n = len(arr)
+
+    # 1단계: 마지막 내부 노드부터 역순으로 최대 힙 구성 — O(n)
+    for start in range((n - 2) // 2, -1, -1):
+        _sift_down(arr, start, n)
+
+    # 2단계: 루트(최댓값)를 끝으로 보내고 힙 크기를 줄이며 재정비 — O(n log n)
+    for end in range(n - 1, 0, -1):
+        arr[0], arr[end] = arr[end], arr[0]
+        _sift_down(arr, 0, end)
+
+    return arr
+
+
+def heap_sort_with_heapq(values: list[int]) -> list[int]:
+    """heapq 표준 라이브러리를 활용한 간결한 오름차순 정렬 (추가 공간 O(n))."""
+    heap = values.copy()
+    heapq.heapify(heap)
+    return [heapq.heappop(heap) for _ in range(len(heap))]
+
+
+if __name__ == "__main__":
+    sample = [7, 2, 9, -3, 5, 2, 0]
+    print("원본 리스트:", sample)
+    print("제자리 힙 정렬:", heap_sort(sample))
+    print("heapq 힙 정렬:", heap_sort_with_heapq(sample))
+    print("빈 리스트:", heap_sort([]))
+    print("원본 유지 확인:", sample)
+```
+
+실행 결과:
+
+```text
+원본 리스트: [7, 2, 9, -3, 5, 2, 0]
+제자리 힙 정렬: [-3, 0, 2, 2, 5, 7, 9]
+heapq 힙 정렬: [-3, 0, 2, 2, 5, 7, 9]
+빈 리스트: []
+원본 유지 확인: [7, 2, 9, -3, 5, 2, 0]
+```
+
 ## 6. 정리
 
 - 이진 트리는 자식 수가 최대 2개이며, BST는 여기에 값 배치 규칙을 추가한다.
@@ -320,3 +393,4 @@ print("남은 값 추출:", ordered)
 - 힙의 루트는 최소 힙의 최솟값 또는 최대 힙의 최댓값이지만, 내부 배열 전체가 정렬되지는 않는다.
 - 특정 값의 탐색에는 BST를, 최솟값·최댓값을 반복해서 꺼내는 작업에는 힙을 활용한다.
 - 최소 힙에서 값을 반복해서 꺼내면 오름차순 결과를 얻으며, 전체 추출 비용은 O(n log n)이다.
+- 힙 정렬은 최대 힙 구성을 활용해 최악에도 O(n log n) 시간으로 정렬하는 불안정 정렬이며, 정렬 과정 자체는 O(1) 추가 공간을 사용한다(원본 보호를 위해 복사본을 만들면 전체 추가 공간은 O(n)).
