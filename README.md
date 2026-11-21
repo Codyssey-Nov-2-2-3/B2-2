@@ -21,8 +21,8 @@ GitHub Flow는 GitHub에서 제안한 가벼운 브랜치 기반 워크플로우
 3. 별도 배포 주기가 없는 학습 노트 프로젝트라 `develop`·`release` 브랜치를 두는 Git Flow보다 작업을 작게 나눠 빠르게 병합하는 방식이 적합하다.
 
 ## 학습 노트 목차
-- 배열과 연결 리스트
-- 스택과 큐
+- [배열과 연결 리스트](src/01-array-linkedlist.md)
+- [스택과 큐](src/02-stack-queue.md)
 - [트리와 힙](src/03-binary-tree-heap.md)
 - [해시와 그래프](src/04-hash-graph.md)
 
@@ -31,3 +31,28 @@ GitHub Flow는 GitHub에서 제안한 가벼운 브랜치 기반 워크플로우
 - [충돌 해결 기록](docs/conflict-resolution.md)
 - [트러블슈팅 기록](docs/troubleshooting-log.md)
 - [제출물 인덱스](SUBMISSION.md)
+
+## 자료구조 시간복잡도 요약표
+
+배열(파이썬 `list`)과 단일 연결 리스트의 연산별 시간복잡도입니다. 자세한 설명과 구현 예제는 [배열과 연결 리스트 노트](src/01-array-linkedlist.md)에 있습니다.
+
+| 연산 | 배열 (`list`) | 단일 연결 리스트 |
+|---|---|---|
+| 인덱스 접근 | O(1) | O(n) |
+| 값 탐색 | O(n) | O(n) |
+| 앞쪽 삽입 | O(n) | O(1) |
+| 뒤쪽 삽입 | 분할 상환 O(1) (리사이징 순간만 O(n)) | `tail` 없으면 O(n), 있으면 O(1) |
+| 중간 삽입 (위치를 알 때) | O(n) | O(1) (앞 노드를 알 때) |
+| 앞쪽 삭제 | O(n) | O(1) |
+| 뒤쪽 삭제 | O(1) | O(n) (`tail`이 있어도 앞 노드를 찾아야 함) |
+| 중간 삭제 (위치를 알 때) | O(n) | O(1) (앞 노드를 알 때) |
+
+- 연결 리스트에서 "위치를 안다"는 것은 앞 노드를 이미 가리키고 있다는 뜻이며, 그 위치를 값으로 찾는 비용(O(n))은 포함하지 않았습니다.
+- `tail`과 `prev`를 함께 유지하는 이중 연결 리스트는 뒤쪽 삭제도 O(1)입니다. (`tail`이 없으면 마지막 노드를 찾는 데 O(n)이 걸립니다.)
+
+### 배열과 연결 리스트 노트 목차
+
+- [2. 배열 (Array)](src/01-array-linkedlist.md#2-배열-array)
+- [3. 연결 리스트 (Linked List)](src/01-array-linkedlist.md#3-연결-리스트-linked-list)
+- [4. 배열과 연결 리스트 비교](src/01-array-linkedlist.md#4-배열과-연결-리스트-비교)
+- [6. 파이썬 구현 예제](src/01-array-linkedlist.md#6-파이썬-구현-예제)
