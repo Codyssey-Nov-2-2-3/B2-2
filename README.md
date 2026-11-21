@@ -22,7 +22,7 @@ GitHub Flow는 GitHub에서 제안한 가벼운 브랜치 기반 워크플로우
 
 ## 학습 노트 목차
 - [배열과 연결 리스트](src/01-array-linkedlist.md)
-- 스택과 큐
+- [스택과 큐](src/02-stack-queue.md)
 - [트리와 힙](src/03-binary-tree-heap.md)
 - [해시와 그래프](src/04-hash-graph.md)
 
