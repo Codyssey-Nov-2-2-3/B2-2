@@ -3,7 +3,7 @@
 ## Team
 - 팀명: Codyssey-Nov-2-2-3 (B2-2, 4인)
 - 저장소: https://github.com/Codyssey-Nov-2-2-3/B2-2
-- 결과물: (C) 자료구조 학습 노트 — [README 목차](README.md#학습-노트-목차)
+- 결과물: 자료구조 학습 노트 — [README 목차](README.md#학습-노트-목차)
 
 ## Member PRs
 
@@ -53,4 +53,5 @@
 
 ## Evidence
 - git log text: [docs/git-log-graph.txt](docs/git-log-graph.txt) (`git log --oneline --graph --all`)
-- 충돌·트러블슈팅 스크린샷: [docs/images/](docs/images/)
+- 스크린샷 ([docs/images/](docs/images/)): 충돌 기록 #1, reset, revert
+- 텍스트 로그(명령어와 출력): 충돌 기록 #2, amend, stash, rebase -i — 각 문서에 기록
