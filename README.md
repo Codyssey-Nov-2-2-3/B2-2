@@ -27,7 +27,7 @@
 - 배열과 연결 리스트
 - 스택과 큐
 - [트리와 힙](src/03-binary-tree-heap.md)
-- 해시와 그래프
+- [해시와 그래프](src/04-hash-graph.md)
 
 ## 협업 문서
 - [기여 가이드](docs/CONTRIBUTING.md)
