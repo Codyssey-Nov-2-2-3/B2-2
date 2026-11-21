@@ -1,18 +1,18 @@
 # Conflict Resolution Log
 
-## 충돌 기록 #1: README 브랜치 전략 섹션 (비자명 충돌: 같은 hunk를 서로 다르게 수정)
-
+## 충돌 기록 #1
 ### 참여자
-- 해결 담당: @ted1117 (B)
-- 상대 작성자: @yoo040501 (C)
+- 작성자: @ted1117 (B)
+- 상대: @yoo040501 (C)
 
 ### 상황(What happened)
-- #14에서 README `브랜치 전략: GitHub Flow` 섹션이 Git Flow(develop/release/hotfix) 개념으로 잘못 병합됨 → #15로 이슈 등록
-- 두 사람이 같은 커밋(`18e90c4`)에서 각자 브랜치를 분기해 README 15~25줄을 서로 다르게 수정
-  - @yoo040501 `feature/dongeun-readme-github-flow` (#16): `develop` 설명 줄 삭제, `develop` → `main` 치환, 선택 이유를 2줄로 축소
-  - @ted1117 `feature/yang-readme-github-flow` (#17): 개념 설명을 GitHub Flow 6단계로, 선택 이유를 3줄로 전면 재작성
-- #16이 먼저 `main`에 병합된 뒤(`5e5a224`), #17 브랜치에서 `origin/main`을 병합하자 `README.md`에서 충돌 발생
-- 과제 기준 "같은 파일의 같은 hunk(인접 라인)를 서로 다르게 수정"에 해당하는 비자명 충돌
+- 파일: `README.md`의 `## 브랜치 전략: GitHub Flow` 섹션 (15~25행)
+- 배경: [#14](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/14)에서 README 브랜치 전략 섹션이 Git Flow(develop/release/hotfix) 개념으로 잘못 병합되어 [#15](https://github.com/Codyssey-Nov-2-2-3/B2-2/issues/15)로 이슈 등록
+- 두 사람이 같은 커밋([`18e90c4`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/18e90c48bc1fa6ca4b9603cedb15262fc48d67a8))에서 각자 브랜치를 분기해 같은 구간을 서로 다르게 수정
+  - @yoo040501 `feature/dongeun-readme-github-flow` ([#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)): `develop` 설명 줄 삭제, `develop` → `main` 치환, 선택 이유를 2줄로 축소
+  - @ted1117 `feature/yang-readme-github-flow` ([#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)): 개념 설명을 GitHub Flow 6단계로, 선택 이유를 3줄로 전면 재작성
+- [#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)이 먼저 `main`에 병합된 뒤([`5e5a224`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/5e5a2245cae970cbae55548dee7e4861e152bb60)), [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17) 브랜치에서 `origin/main`을 병합하자 충돌 발생
+- 유형: 비자명 충돌 (같은 파일의 같은 hunk를 서로 다르게 수정)
 
 ### 충돌 내용(Conflict markers)
 ```txt
@@ -49,17 +49,17 @@ $ git merge origin/main
 >>>>>>> origin/main
 ```
 
-- `<<<<<<< HEAD` ~ `=======`: 현재 브랜치(`feature/yang-readme-github-flow`)의 내용
-- `=======` ~ `>>>>>>> origin/main`: 병합하려는 `origin/main`(#16 반영본)의 내용
+- `<<<<<<< HEAD` ~ `=======`: 현재 브랜치(`feature/yang-readme-github-flow`, [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17))의 내용
+- `=======` ~ `>>>>>>> origin/main`: 병합하려는 `origin/main`([#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16) 반영본)의 내용
 
 ![VSCode에서 확인한 README 충돌 마커](images/conflict-1-vscode-markers.png)
 
 ### 해결 과정(How)
-- 전략: 구간별 선택
-  - `GitHub Flow란?` 개념 설명 → `origin/main`(#16) 쪽 채택
-  - `선택한 이유` → `HEAD`(#17) 쪽 3줄 채택
-- 선택 이유: 먼저 병합된 #16의 개념 설명과 #17의 선택 이유 3줄을 구간별로 채택해 두 사람의 작업을 모두 살렸다. 개념 설명에 남은 Git Flow 요소(`release/*`, `hotfix/*`)는 이번 충돌 해결 범위를 넓히지 않고 후속 PR에서 정리하기로 했다.
-- 실행한 명령/절차
+- 전략: **choose one (구간별 선택)**
+  - `GitHub Flow란?` 개념 설명 → `origin/main`([#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)) 쪽 채택
+  - `우리 팀이 GitHub Flow를 선택한 이유` → `HEAD`([#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)) 쪽 3줄 채택
+- 이유: 먼저 병합된 [#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)의 개념 설명과 [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)의 선택 이유 3줄을 구간별로 채택해 두 사람의 작업을 모두 살렸다.
+- 수행한 명령/절차
 
   ```bash
   git fetch origin
@@ -71,14 +71,11 @@ $ git merge origin/main
   ```
 
 ### 결과(Outcome)
-- 해결 커밋: `697fe0b`
-- 관련 PR: #16(먼저 병합), #17(충돌 해결 후 병합, `999b36b`)
-- 관련 이슈: #15 (#17 병합으로 자동 종료)
-- 후속 조치: README `GitHub Flow란?`에 남은 `release/*`·`hotfix/*` 설명과 릴리스 태그 문구를 후속 이슈·PR에서 정리 예정
+- 충돌 해결 커밋 [`697fe0b`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/697fe0bcc7b5651efa9263c9be1cd4e6a7932551)를 push한 뒤 [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)을 `main`에 병합([`999b36b`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/999b36bf88af724259f2941e2eb01f92dd00ff47))
+- 관련 PR: [#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)(먼저 병합), [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)(충돌 해결 후 병합) / 관련 이슈: [#15](https://github.com/Codyssey-Nov-2-2-3/B2-2/issues/15) ([#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17) 병합으로 자동 종료)
 
 ![충돌 해결 후 git log](images/conflict-1-git-log.png)
 
 ### 배운 점(Learnings)
 - 같은 이슈를 두 사람이 동시에 작업하면 같은 구간을 다르게 고치게 되어 충돌이 거의 확실하다. 이슈 담당자를 한 명으로 정하고, 같이 고칠 때는 수정 범위를 먼저 나눠야 한다.
 - 문자열을 기계적으로 치환(`develop` → `main`)하는 수정은 문장은 고쳐도 개념(Git Flow 구조)은 고치지 못한다. 충돌을 해결할 때는 마커만 지우지 말고 결과 문서 전체의 일관성을 다시 읽어야 한다.
-- 충돌 해결 커밋을 push한 뒤에 리뷰를 받아야 리뷰어가 해결 결과까지 검증할 수 있다.
