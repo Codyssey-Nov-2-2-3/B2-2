@@ -73,6 +73,7 @@ $ git merge origin/main
 ### 결과(Outcome)
 - 충돌 해결 커밋 [`697fe0b`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/697fe0bcc7b5651efa9263c9be1cd4e6a7932551)를 push한 뒤 [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)을 `main`에 병합([`999b36b`](https://github.com/Codyssey-Nov-2-2-3/B2-2/commit/999b36bf88af724259f2941e2eb01f92dd00ff47))
 - 관련 PR: [#16](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/16)(먼저 병합), [#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17)(충돌 해결 후 병합) / 관련 이슈: [#15](https://github.com/Codyssey-Nov-2-2-3/B2-2/issues/15) ([#17](https://github.com/Codyssey-Nov-2-2-3/B2-2/pull/17) 병합으로 자동 종료)
+- 충돌은 해결했지만, 개념 설명에서 `origin/main` 쪽을 채택하면서 `release/*`·`hotfix/*` 설명이 README에 남았다. GitHub Flow 개념에 맞게 README를 추후 수정한다 → [#26](https://github.com/Codyssey-Nov-2-2-3/B2-2/issues/26)
 
 ![충돌 해결 후 git log](images/conflict-1-git-log.png)
 
