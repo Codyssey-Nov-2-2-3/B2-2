@@ -32,7 +32,7 @@
 3. 남은 Python 구현 예제를 노트에 추가한 뒤 하나의 커밋으로 다시 커밋했다.
 
    ```bash
-   git add src/02-stack-queue.md
+   git add src/02-stack-queue.md   # reset 이후 추가로 작성한 Python 예제를 스테이징 (기존 변경은 이미 staged 상태)
    git commit -m "docs: 스택과 큐 개념 및 Python 구현 예제 노트 작성"
    git log --oneline -3   # ab87e12 (HEAD -> feature/yang-stack-note) ...
    ```
