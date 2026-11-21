@@ -1,0 +1,141 @@
+# $ git log --oneline --graph --all
+# 생성 시점: main 12348b3 (2026-11-21, PR #33 병합 전 기준)
+
+*   12348b3 Merge pull request #22 from Codyssey-Nov-2-2-3/feature/dongtak-readme-table
+|\  
+| * b9a7c97 docs: README 학습 노트 목차의 스택과 큐 항목에 노트 링크 추가
+| * 8d67345 docs: PR #22 리뷰 반영해 시간복잡도 표 조건과 amend 기록 보완
+| *   00e01ac docs: main의 troubleshooting-log 병합 및 amend 기록 충돌 해결
+| |\  
+| |/  
+|/|   
+* |   88dda6b Merge pull request #28 from Codyssey-Nov-2-2-3/feature/cho-nontrivial-conflict
+|\ \  
+| * \   a30afdb docs: main의 충돌 기록 #1·reset 기록·README 정정 반영 및 충돌 해결
+| |\ \  
+| |/ /  
+|/| |   
+* | |   9a08daf Merge pull request #31 from Codyssey-Nov-2-2-3/feature/yang-reset-log
+|\ \ \  
+| * | | f357903 docs: 리뷰 피드백 반영하여 reset 기록의 git add 이유 주석 보완
+| * | | 9cff337 docs: troubleshooting-log에 git reset --soft 실습 기록 작성
+|/ / /  
+* | |   5f7348c Merge pull request #29 from Codyssey-Nov-2-2-3/feature/yang-readme-github-flow-fix
+|\ \ \  
+| * | | 2684431 docs: README GitHub Flow 개념 설명을 정의로 정정하고 선택 이유 표현 보완
+|/ / /  
+* | |   d04001f Merge pull request #25 from Codyssey-Nov-2-2-3/feature/yang-conflict-log
+|\ \ \  
+| * | | b111090 docs: 리뷰 피드백 반영하여 충돌 기록 #1 결과에 README 개념 정정 필요 사항과 후속 이슈 링크 보완
+| * | | ced7205 docs: conflict-resolution 충돌 기록 #1을 팀 템플릿 형식으로 정리하고 커밋·PR 링크 추가
+| * | | 5b106a9 docs: conflict-resolution에 README 브랜치 전략 섹션 충돌 기록 #1 작성
+| | * | ed47b4a docs: 리뷰 피드백 반영하여 힙 정렬 예제의 추가 공간복잡도 구분 명시
+| | * | c67e330 docs: troubleshooting-log에 stash·rebase 기록 추가 및 README 해시 노트 링크 연결
+| | * | 0e1323a docs: conflict-resolution에 트리·힙 비자명 충돌 기록 #2 작성
+| | * |   51af3fe docs: main의 트리·힙 파일명 변경 병합 및 비자명 충돌 해결
+| | |\ \  
+| |_|/ /  
+|/| | |   
+* | | |   9d2073e Merge pull request #24 from Codyssey-Nov-2-2-3/feature/dongeun-nontrivial-conflict
+|\ \ \ \  
+| * | | | 7bb11b4 docs: revert 실습 기록 및 증빙 이미지 추가
+| * | | | 09ca0cb fix: revert로 heapify 시간복잡도 복구
+| * | | | 583c189 docs: revert 실습용 heapify 복잡도 변경
+| * | | | 866b029 docs: 트리 힙 노트 파일명 변경 및 정리 보완
+|/ / / /  
+| | * / 4fc1a2b feat: 트리·힙 노트에 힙 정렬 심화 예제 및 설명 추가
+| |/ /  
+|/| |   
+* | |   037ecc0 Merge pull request #12 from Codyssey-Nov-2-2-3/feature/dongeun-tree-heap-note
+|\ \ \  
+| * \ \   ae91987 docs: 최신 main 병합 및 협업 가이드 통합
+| |\ \ \  
+| |/ / /  
+|/| | |   
+* | | |   9948376 Merge pull request #10 from Codyssey-Nov-2-2-3/feature/yang-stack-note
+|\ \ \ \  
+| * | | | 5014189 refactor: CONTRIBUTING PR·리뷰 규칙 문체를 하십시오체로 통일
+| * | | |   f78c030 docs: main의 CONTRIBUTING 변경 사항 병합 및 섹션 순서 충돌 해결
+| |\ \ \ \  
+| |/ / / /  
+|/| | | |   
+* | | | |   10b4bc6 Merge pull request #9 from Codyssey-Nov-2-2-3/feature/dongtak-array-note
+|\ \ \ \ \  
+| * | | | | 537231b docs: 배열·연결 리스트 노트에 리뷰 반영 (분할 상환 설명, 뒤쪽 삭제 비용, 타입 힌트)
+| * | | | | acdb436 docs: CONTRIBUTING 네이밍 규칙 제목을 브랜치 네이밍 규칙으로 변경
+| * | | | | 82260c5 feat: 연결 리스트 파이썬 구현 예제 추가
+| * | | | | a20b913 docs: 배열과 연결 리스트 개념 노트 작성
+| * | | | | c72d743 docs: 브랜치 전략과 커밋 메시지 규칙을 CONTRIBUTING에 작성
+* | | | | |   9c3e9d8 Merge pull request #20 from Codyssey-Nov-2-2-3/feature/cho-hash-note
+|\ \ \ \ \ \  
+| |_|_|_|/ /  
+|/| | | | |   
+| * | | | | 92027e4 docs: 리뷰 피드백 반영하여 해시 리해싱 예제와 DFS 공간복잡도 보완
+| * | | | | 5b5de30 feat: 해시 테이블과 그래프 파이썬 구현 예제 추가
+| * | | | | d858c8a docs: 해시 테이블과 그래프 개념 노트 작성
+|/ / / / /  
+| | * | | ddcd06c docs: 리뷰 피드백 반영하여 CONTRIBUTING 리뷰어 지정·PR 예시와 스택 append 복잡도 보완
+| | * | | 38a5923 docs: 스택과 큐 예제에 타입 설명과 실행 결과 추가
+| | * | |   17b69fe chore: main 최신 변경 사항을 feature/yang-stack-note에 병합
+| | |\ \ \  
+| | * | | | ab87e12 docs: 스택과 큐 개념 및 Python 구현 예제 노트 작성
+| | * | | | fa87df3 docs: CONTRIBUTING에 PR 작성 규칙과 코드 리뷰 규칙 추가
+| | | | * | a218269 docs: 리뷰 반영 및 충돌 대응 절차 보완
+| | | | * | a4f56ef docs: 리뷰 의견을 반영해 최소 힙 구조도 추가
+| | | | * | e868178 docs: 트리와 힙 개념 및 Python 예제 작성
+| | | | * | c923457 docs: 협업 가이드에 충돌 대응 흐름 추가
+| | | |/ /  
+| | | | * 2115fc4 docs: git commit --amend 트러블슈팅 실습 기록 작성
+| | | | * 3b8b766 docs: README에 자료구조 시간복잡도 요약표와 배열·연결 리스트 노트 목차 추가
+| |_|_|/  
+|/| | |   
+* | | |   999b36b Merge pull request #17 from Codyssey-Nov-2-2-3/feature/yang-readme-github-flow
+|\ \ \ \  
+| * \ \ \   697fe0b docs: main의 README 수정 사항 병합 및 브랜치 전략 섹션 충돌 해결
+| |\ \ \ \  
+| |/ / / /  
+|/| | | |   
+* | | | |   5e5a224 Merge pull request #16 from Codyssey-Nov-2-2-3/feature/dongeun-readme-github-flow
+|\ \ \ \ \  
+| * | | | | bea4f03 fix: readme 수정
+|/ / / / /  
+| * / / / 078f9f5 docs: README 브랜치 전략 섹션을 GitHub Flow 개념과 선택 이유로 정정
+|/ / / /  
+* | | |   18e90c4 Merge pull request #14 from Codyssey-Nov-2-2-3/feature/yang-readme-init
+|\ \ \ \  
+| |_|_|/  
+|/| | |   
+| * | | d86ad26 docs: README에 프로젝트 소개와 브랜치 전략 섹션 작성
+|/ / /  
+* | / c66ea35 chore: SUBMISSION.md 파일 이름 오타 수정
+| |/  
+|/|   
+* |   1c7bf9b Merge pull request #5 from Codyssey-Nov-2-2-3/chore/ai-prompt
+|\ \  
+| |/  
+|/|   
+| *   06e838b docs: CODEOWNERS 설정을 chore/ai-prompt에 병합
+| |\  
+| | * 0d12af7 chore: CODEOWNERS 내용 추가
+| | * 88f3cbd docs: 팀원별 주제 파일과 AGENTS.md 담당자 CODEOWNERS 설정
+| |/  
+|/|   
+* |   2f0eda6 Merge pull request #4 from Codyssey-Nov-2-2-3/chore/ai-prompt
+|\ \  
+* \ \   0bdd3dc Merge pull request #3 from Codyssey-Nov-2-2-3/chore/ai-prompt
+|\ \ \  
+* \ \ \   0c8c61e Merge pull request #2 from Codyssey-Nov-2-2-3/chore/ai-prompt
+|\ \ \ \  
+| | | | * 2be03d9 docs: PR 본문 작성 템플릿 추가
+| | | |/  
+| | | * e5fbe71 docs: 프롬프트 내용 추가
+| | |/  
+| | * 249c483 chore: 마크다운 문법 오류 해결
+| |/  
+| * 2b6a597 docs: 팀원 공통 프롬프트 파일 추가
+|/  
+*   f07d229 Merge pull request #1 from Codyssey-Nov-2-2-3/chore/settings
+|\  
+| * 92399fe chore: add project settings and initial documents
+|/  
+* be33ca6 Initial empty commit
